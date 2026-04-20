@@ -1,0 +1,1 @@
+A repository for analyses related to the Family First Prevention Services Act and the Title IV-E Prevention Services Clearinghouse. I use these analyses and visualizations for exploratory purposes in my work supporting implementation and understanding of evidence based programs and Title IV-E prevention implementation. I welcome any feedback.
