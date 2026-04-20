@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Title IV-E Prevention Plan Dashboard</title>
+<title>Title IV-E Prevention Plan Evidence-Based Programs by State</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,95 +12,52 @@
 <body>
 
 <header>
-  <h1>Title IV-E Prevention Plan Dashboard</h1>
-  <p class="subtitle">Evidence-Based Programs by State</p>
+  <div class="header-top">
+    <h1>Title IV-E Prevention Plan Evidence-Based Programs by State</h1>
+    <span class="draft-pill">DRAFT</span>
+  </div>
+  <p class="attribution">
+    Developed by Cynthia Burnson, PhD, Chapin Hall. Created with assistance from Claude (Anthropic).
+  </p>
+  <p class="feedback">
+    For feedback: <a href="mailto:cburnson@chapinhall.org">cburnson@chapinhall.org</a>
+  </p>
 </header>
 
-<nav class="tabs">
-  <button class="tab-btn active" data-target="view-map">Interactive Map</button>
-  <button class="tab-btn" data-target="view-explorer">Program Explorer</button>
-  <button class="tab-btn" data-target="view-table">Comparison Table</button>
-</nav>
+<section class="purpose">
+  <p>
+    This dashboard is organized by program rather than by state, and is intended as a complement to the
+    <a href="https://acf.gov/cb/title-iv-e-prevention-program-five-year-prevention-plans" target="_blank" rel="noopener">ACF Children's Bureau Title IV-E Prevention Plans page</a>,
+    which provides comprehensive state-by-state information on approved programs and prevention plans.
+  </p>
+</section>
 
 <main>
 
-  <!-- VIEW 1: MAP -->
-  <section id="view-map" class="view active">
-    <div class="legend">
-      <div class="legend-item"><span class="legend-swatch" style="background:#800000"></span>Approved</div>
-      <div class="legend-item"><span class="legend-swatch" style="background:#C16622"></span>Submitted, not yet approved</div>
-      <div class="legend-item"><span class="legend-swatch" style="background:#D6D6CE"></span>Not submitted / no info</div>
+  <div class="explorer-container">
+    <div class="search-controls">
+      <input type="search" id="program-search" placeholder="Search programs...">
+      <div class="sort-toggle">
+        <button class="active" data-sort="popularity">By popularity</button>
+        <button data-sort="alpha">A-Z</button>
+      </div>
+      <ul class="program-list" id="program-list"></ul>
     </div>
 
-    <div class="map-container">
-      <div class="map-panel">
-        <svg id="us-map" role="img" aria-label="US map of Title IV-E prevention plan status by state"></svg>
+    <div class="explorer-right">
+      <div class="explorer-map-panel">
+        <h3 class="explorer-map-title">State coverage</h3>
+        <p class="explorer-map-subtitle">Select a program on the left to highlight states that include it.</p>
+        <svg id="explorer-map" role="img" aria-label="US map highlighting states using the selected program"></svg>
         <div class="territory-strip">
           <div class="territory-strip-label">Territories</div>
-          <div class="territory-tiles" id="territory-tiles"></div>
+          <div class="territory-tiles" id="explorer-territory-tiles"></div>
         </div>
       </div>
 
-      <div class="detail-panel" id="detail-panel"></div>
+      <div class="state-usage-panel" id="state-usage-panel"></div>
     </div>
-  </section>
-
-  <!-- VIEW 2: PROGRAM EXPLORER -->
-  <section id="view-explorer" class="view">
-    <div class="explorer-container">
-      <div class="search-controls">
-        <input type="search" id="program-search" placeholder="Search programs...">
-        <div class="sort-toggle">
-          <button class="active" data-sort="popularity">By popularity</button>
-          <button data-sort="alpha">A-Z</button>
-        </div>
-        <ul class="program-list" id="program-list"></ul>
-      </div>
-
-      <div class="explorer-right">
-        <div class="explorer-map-panel">
-          <h3 class="explorer-map-title">State coverage</h3>
-          <p class="explorer-map-subtitle">Select a program on the left to highlight states that include it.</p>
-          <svg id="explorer-map" role="img" aria-label="US map highlighting states using the selected program"></svg>
-          <div class="territory-strip">
-            <div class="territory-strip-label">Territories</div>
-            <div class="territory-tiles" id="explorer-territory-tiles"></div>
-          </div>
-        </div>
-
-        <div class="state-usage-panel" id="state-usage-panel"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- VIEW 3: COMPARISON TABLE -->
-  <section id="view-table" class="view">
-    <div class="table-controls">
-      <input type="search" id="table-search" placeholder="Search states...">
-      <select id="status-filter">
-        <option value="all">All statuses</option>
-        <option value="approved">Approved</option>
-        <option value="submitted">Submitted, not yet approved</option>
-        <option value="none">Not submitted / no info</option>
-      </select>
-      <span class="row-count" id="row-count"></span>
-    </div>
-
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th data-sort="name">State <span class="sort-indicator">▲▼</span></th>
-            <th data-sort="status">Status <span class="sort-indicator">▲▼</span></th>
-            <th data-sort="planYears">Plan Years <span class="sort-indicator">▲▼</span></th>
-            <th data-sort="count"># Programs <span class="sort-indicator">▲▼</span></th>
-            <th>Programs</th>
-          </tr>
-        </thead>
-        <tbody id="comparison-tbody"></tbody>
-      </table>
-    </div>
-  </section>
+  </div>
 
 </main>
 
@@ -108,11 +65,8 @@
   Data source: ACF Children's Bureau &nbsp;|&nbsp; Visualization by Chapin Hall
 </footer>
 
-<!-- External libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
-
-<!-- App scripts -->
 <script src="data.js"></script>
 <script src="app.js"></script>
 
