@@ -3,6 +3,14 @@
 // Last refreshed: April 27, 2026
 // Built from saved HTML export of the ACF interactive map page.
 
+// Chapin Hall brand colors for map fills
+const COLORS = {
+  approved: "#800000",   // Maroon
+  submitted: "#C16622",  // Warm Orange
+  none: "#D6D6CE",       // Light Warm Gray
+  highlight: "#F8A429"   // Gold (used when a program is selected)
+};
+
 const STATE_DATA = [
   {
     name: "Alabama",
